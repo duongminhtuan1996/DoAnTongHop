@@ -1,5 +1,7 @@
 package edu.nuce.quanlybanlaptop.service.Impl;
 
+import edu.nuce.quanlybanlaptop.converter.CategoryConverter;
+import edu.nuce.quanlybanlaptop.dto.CategoryDTO;
 import edu.nuce.quanlybanlaptop.entity.Category;
 import edu.nuce.quanlybanlaptop.repository.CategoryRepository;
 import edu.nuce.quanlybanlaptop.service.CategoryService;
@@ -17,8 +19,45 @@ public class CategoryServiceImpl implements CategoryService {
     @Autowired
     CategoryRepository categoryRepository;
 
+    CategoryConverter categoryConverter = new CategoryConverter();
+
+    //lay ve list category
     @Override
-    public List<Category> searchCategory(String keyword) {
+    public List<CategoryDTO> listAll() {
+        List<CategoryDTO> result = new ArrayList<>();
+        List<Category> listCategory =  categoryRepository.findAll();
+        for (Category category: listCategory){
+            result.add(categoryConverter.toDTO(category));
+        }
+        return  result;
+    }
+
+    //lay 1 category theo id
+    @Override
+    public CategoryDTO get(Long id) {
+        Category category = categoryRepository.findById(id).get();
+        CategoryDTO result = categoryConverter.toDTO(category);
+        return result;
+    }
+
+    //them 1 category
+    @Override
+    public void save(CategoryDTO categoryDTO) {
+        Category category = categoryConverter.toEntity(categoryDTO);
+        categoryRepository.save(category);
+    }
+
+
+
+    //xoa 1 category theo id
+    @Override
+    public void delete(long id) {
+        categoryRepository.deleteById(id);
+    }
+
+    /*
+    @Override
+    public List<Category> searchCategory(int keyword) {
         List<Category> result = new ArrayList<>();
         List<Category> categoryList = categoryRepository.findAll();
 
@@ -28,28 +67,6 @@ public class CategoryServiceImpl implements CategoryService {
             }
         }
         return result;
-    }
-
-    @Override
-    public List<Category> listAll() {
-        return categoryRepository.findAll();
-    }
-
-    @Override
-    public void save(Category category) {
-        categoryRepository.save(category);
-    }
-
-    @Override
-    public Category get(Long id) {
-        Category result = categoryRepository.findById(id).get();
-        return result;
-    }
-
-    @Override
-    public void delete(long id) {
-        categoryRepository.deleteById(id);
-    }
-
+    }*/
 
 }

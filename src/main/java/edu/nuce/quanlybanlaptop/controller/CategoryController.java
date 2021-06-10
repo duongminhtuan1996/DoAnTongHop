@@ -1,11 +1,15 @@
 package edu.nuce.quanlybanlaptop.controller;
 
 
+import edu.nuce.quanlybanlaptop.dto.CategoryDTO;
+import edu.nuce.quanlybanlaptop.entity.Category;
 import edu.nuce.quanlybanlaptop.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @ComponentScan("edu.nuce.quanlybanlaptop.service")
@@ -13,29 +17,32 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/category")
 public class CategoryController {
 
-
     @Autowired
     private CategoryService sv;
 
-
-
+    //lay ve list category
     @GetMapping("")
-    public ResponseEntity<?> getListCategory(){
-        return ResponseEntity.ok(sv.listAll());
+    public List<CategoryDTO> getListCategory(){
+        List<CategoryDTO> result = sv.listAll();
+        return result;
     }
 
+    //lay ve 1 category theo id
     @GetMapping("/{id}")
-    public  ResponseEntity<?> getCategoryById(@PathVariable(name = "id")Long id){
-        return ResponseEntity.ok(sv.get(id));
+    public  CategoryDTO getCategoryById(@PathVariable(name = "id")Long id){
+        CategoryDTO result = sv.get(id);
+        return result;
     }
 
-    @GetMapping("/search")
-    public ResponseEntity<?> searchCategory(@RequestParam(name = "keyword",required = false,defaultValue = "")String status){
-        return ResponseEntity.ok(sv.searchCategory(status));
+    @RequestMapping("/")
+    public void addCategory(@RequestBody CategoryDTO categoryDTO){
+        sv.save(categoryDTO);
+        int a = 0;
     }
 
-    @DeleteMapping("/delete/{id}")
-    public void deleteCategory(@PathVariable(name = "id")Integer id){
+    //xoa 1 category theo id
+    @DeleteMapping("/{id}")
+    public void deleteCategory(@PathVariable(name = "id")Long id){
         sv.delete(id);
     }
 
@@ -50,6 +57,11 @@ public class CategoryController {
             }
         }
     }
-     */
+    */
+    /*
+    @GetMapping("/search")
+    public ResponseEntity<?> searchCategory(@RequestParam(name = "keyword",required = false,defaultValue = "")String status){
+        return ResponseEntity.ok(sv.searchCategory(status));
+    }*/
 
 }
